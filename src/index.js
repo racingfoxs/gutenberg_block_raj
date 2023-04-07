@@ -1,35 +1,72 @@
 //import from libary wordpress
+
 const { registerBlockType } = wp.blocks;
+const { RichText } = wp.editor;
+// import { registerBlockType } from '@wordpress/blocks';
+// import {  RichText } from '@wordpress/components';
 
-registerBlockType('raj/custom-cta', {
-    title: 'Call to Action',
-    description: 'Block to generate a custom Call to Action',
-    icon: 'format-image',
-    category: 'layout',
+registerBlockType("raj/custom-cta", {
+  title: "Call to Action",
+  description: "Block to generate a custom Call to Action",
+  icon: "format-image",
+  category: "layout",
 
-    // custom attributes
-    attributes: {
-        author: {
-            type: 'string'
-        }
+  // custom attributes
+  attributes: {
+    title: {
+      type: "string",
+      source: "html",
+      selector: "h2",
     },
+    body: {
+      type: "string",
+      source: "html",
+      selector: "p",
+    },
+  },
+  // custom functions
+
+  //build functions
+  edit({ attributes, setAttributes }) {
+    const { title, body } = attributes;
+
     // custom functions
-
-
-    //build functions
-    edit({ attributes, setAttributes }) {
-
-        //jsx
-
-        function updateAuthor(event) {
-            setAttributes( { author: event.target.value } );
-            // console.log(event.target.value);
-        }
-
-        return <input value={ attributes.author } onChange={ updateAuthor } type="text" />;
-    },
-
-    save({ attributes }) {
-        return <p>Author Name: <i>{ attributes.author }</i></p>;
+    function onChangeTitle(newTitle) {
+      setAttributes({ title: newTitle });
     }
+
+    function onChangeBody(newBody) {
+      setAttributes({ body: newBody });
+    }
+
+    return [
+      <div class="cta-container">
+        <RichText
+          key="editable"
+          tagName="h2"
+          placeholder="Your CTA Title"
+          value={title}
+          onChange={onChangeTitle}
+        />
+        <RichText
+          key="editable"
+          tagName="p"
+          placeholder="Your CTA Description"
+          value={body}
+          onChange={onChangeBody}
+        />
+      </div>,
+    ];
+  },
+
+  save({ attributes }) {
+    const { title, body } = attributes;
+
+    return (
+      <div class="cta-container">
+        <h2>{title}</h2>
+        <RichText.Content tagName="p" value={body} />
+      </div>
+    );
+  },
 });

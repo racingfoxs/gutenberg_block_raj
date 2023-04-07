@@ -42,7 +42,10 @@
     "build:print": "node-sass print.scss print.css --output-style expanded && postcss -r print.css",
     "build": "run-p \"build:*\"",
     "watch": "chokidar \"**/*.scss\" -c \"npm run build\" --initial",
-    "build:scripts" : "wp-scripts build",
-    "start-build" : "wp-scripts start"
+    "build:scripts": "wp-scripts build",
+    "start-build": "wp-scripts start"
+  },
+  "dependencies": {
+    "@wordpress/block-editor": "^11.7.0"
   }
 }

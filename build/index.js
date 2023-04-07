@@ -2,6 +2,16 @@
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
 
+/***/ "@wordpress/block-editor":
+/*!*************************************!*\
+  !*** external ["wp","blockEditor"] ***!
+  \*************************************/
+/***/ ((module) => {
+
+module.exports = window["wp"]["blockEditor"];
+
+/***/ }),
+
 /***/ "@wordpress/element":
 /*!*********************************!*\
   !*** external ["wp","element"] ***!
@@ -89,11 +99,15 @@ var __webpack_exports__ = {};
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/block-editor */ "@wordpress/block-editor");
+/* harmony import */ var _wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__);
 
 //import from libary wordpress
 const {
   registerBlockType
 } = wp.blocks;
+// const { RichText } = wp.editor;
+
 registerBlockType('raj/custom-cta', {
   title: 'Call to Action',
   description: 'Block to generate a custom Call to Action',
@@ -101,8 +115,15 @@ registerBlockType('raj/custom-cta', {
   category: 'layout',
   // custom attributes
   attributes: {
-    author: {
-      type: 'string'
+    title: {
+      type: 'string',
+      source: 'html',
+      selector: 'h2'
+    },
+    body: {
+      type: 'string',
+      source: 'html',
+      selector: 'p'
     }
   },
   // custom functions
@@ -113,26 +134,52 @@ registerBlockType('raj/custom-cta', {
       attributes,
       setAttributes
     } = _ref;
-    //jsx
+    const {
+      title,
+      body
+    } = attributes;
 
-    function updateAuthor(event) {
+    // custom functions
+    function onChangeTitle(newTitle) {
       setAttributes({
-        author: event.target.value
+        title: newTitle
       });
-      // console.log(event.target.value);
     }
-
-    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
-      value: attributes.author,
-      onChange: updateAuthor,
-      type: "text"
-    });
+    function onChangeBody(newBody) {
+      setAttributes({
+        body: newBody
+      });
+    }
+    return [(0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      class: "cta-container"
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.RichText, {
+      key: "editable",
+      tagName: "h2",
+      placeholder: "Your CTA Title",
+      value: title,
+      onChange: onChangeTitle
+    }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.RichText, {
+      key: "editable",
+      tagName: "p",
+      placeholder: "Your CTA Description",
+      value: body,
+      onChange: onChangeBody
+    }))];
   },
   save(_ref2) {
     let {
       attributes
     } = _ref2;
-    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, "Author Name: ", (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("i", null, attributes.author));
+    const {
+      title,
+      body
+    } = attributes;
+    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      class: "cta-container"
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("h2", null, title), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.RichText.Content, {
+      tagName: "p",
+      value: body
+    }));
   }
 });
 })();
